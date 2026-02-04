@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Be My Valentine 💖</title>
+
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      margin-top: 60px;
+      color: #6b0036;
+    }
+
+    h1 {
+      font-size: 40px;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+
+    img {
+      width: 280px;
+      border-radius: 20px;
+      margin: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      margin: 10px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      background-color: #ff4d6d;
+      color: white;
+    }
+
+    button:hover {
+      background-color: #e63950;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Hey ❤️</h1>
+
+  <!-- IMAGE -->
+  <img src="love.jpg" alt="Love Image">
+
+  <h2>You make my world brighter ✨<br>
+      Will you be my Valentine? 💕</h2>
+
+  <!-- MUSIC -->
+  <audio id="music" src="love.mp3"></audio>
+  <br>
+  <button onclick="playMusic()">🎶 Play Music</button>
+
+  <br><br>
+
+  <button onclick="yes()">YES 😍</button>
+  <button onclick="no()">NO 🙄</button>
+
+  <script>
+    function playMusic() {
+      document.getElementById("music").play();
+    }
+
+    function yes() {
+      document.body.innerHTML =
+        "<h1>YAYYY 💕🥰</h1><p>You just made me the happiest,I LOVE YOU ❤️</p>";
+    }
+
+    function no() {
+      alert("BAD LUCK MISSED A CHANCE 😜💖");
+    }
+  </script>
+
+</body>
+</html>
