@@ -5,11 +5,19 @@
 
   <style>
     body {
-      background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
-      text-align: center;
-      font-family: 'Arial', sans-serif;
-      margin-top: 60px;
-      color: #6b0036;
+  background:
+    linear-gradient(to bottom right, #ff9a9e, #fad0c4),
+    url("teddy1.png");
+  
+  background-repeat: repeat;
+  background-size: 120px;
+  background-blend-mode: soft-light;
+
+  text-align: center;
+  font-family: Arial, sans-serif;
+  margin-top: 60px;
+  color: #6b0036;
+}
     }
 
     h1 {
@@ -20,32 +28,6 @@
       font-size: 26px;
       margin-bottom: 20px;
     }
-    .teddy {
-    position: fixed;
-    bottom: 20px;
-    width: 120px;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    animation: bounce 2s infinite;
-  }
-
-  .teddy-left {
-    left: 20px;
-  }
-
-  .teddy-right {
-    right: 20px;
-  }
-
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-25px);
-    }
-  }
 
     img {
       width: 320px;
@@ -94,9 +76,6 @@
 </head>
 
 <body>
-  <!-- 🧸 Teddy Bears -->
-<img src="teddy1.png" class="teddy teddy-left" alt="Teddy Bear">
-<img src="teddy1.png" class="teddy teddy-right" alt="Teddy Bear">
 
   <h1>Hey ❤️</h1>
 
