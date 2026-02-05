@@ -85,23 +85,17 @@
 
   <br><br>
 
-  <button onclick="openletter()">YES 💖</button>
+  <button type="button" onclick="openLetter()">YES 💖</button>
   <button onclick="no()">NO 🙄</button>
 
   <script>
-    function openLetter() {
-      window.location.href = "letter.html";
-    }
     function playMusic() {
       document.getElementById("music").play();
     }
-
-    function yes() {
-      document.body.innerHTML =
-        "<h1>YAYYY 💕🥰</h1><p>You just made me the happiest,I LOVE YOU ❤️</p>";
-    }
-
-    function no() {
+   function openLetter() {
+  window.location.href = "letter.html";
+}
+function no() {
       alert("BAD LUCK MISSED A CHANCE 😜💖");
     } 
     /*heart animation*/
