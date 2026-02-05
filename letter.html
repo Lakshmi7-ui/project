@@ -1,99 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>For You 💌</title>
+<meta charset="UTF-8">
+<title>My Love 💌</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-       background: linear-gradient(to bottom right, #fce1ec, #fff7fb);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Dancing Script', cursive;
-    }
-
-    .container {
-      text-align: center;
-      position: relative;
-    }
-
-    /* Envelope */
-    .envelope {
-      font-size: 90px;
-      cursor: pointer;
-      transition: transform 0.4s;
-    }
-
-    .envelope:hover {
-      transform: scale(1.1);
-    }
-
-    /* Letter */
-    .letter {
-      margin-top: 20px;
-      background: white;
-      padding: 25px;
-      width: 340px;
-      border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 1.5s ease;
-      display: none;
-    }
-
-    .letter.show {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .letter h2 {
-      font-family: 'Great Vibes', cursive;
-      font-size: 38px;
-      margin-bottom: 10px;
-    }
-
-    .letter p {
-      font-size: 22px;
-      line-height: 1.6;
-    }
-
-    .sign {
-      text-align: right;
-      margin-top: 15px;
-      font-style: italic;
-    }
-    /* Floating hearts */
-.hearts span {
-  position: fixed;
-  bottom: -20px;
-  font-size: 24px;
-  animation: floatUp 6s linear infinite;
-  opacity: 0.7;
+<style>
+/* ---------------- Body and Background ---------------- */
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #fce1ec, #fff7fb);
+  font-family: 'Dancing Script', cursive;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Different positions & delays */
-.hearts span:nth-child(1) { left: 10%; animation-delay: 0s; }
-.hearts span:nth-child(2) { left: 30%; animation-delay: 2s; }
-.hearts span:nth-child(3) { left: 50%; animation-delay: 4s; }
-.hearts span:nth-child(4) { left: 70%; animation-delay: 1s; }
-.hearts span:nth-child(5) { left: 90%; animation-delay: 3s; }
+/* ---------------- Container for Letter ---------------- */
+.container {
+  text-align: center;
+  position: relative;
+  z-index: 1; /* Keep letter above floating emojis */
+}
 
-@keyframes floatUp {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  20% { opacity: 1; }
-  100% {
-    transform: translateY(-100vh);
-    opacity: 0;
-  }
+/* ---------------- Sealed Envelope ---------------- */
+.envelope {
+  font-size: 90px;
+  cursor: pointer;
+  transition: transform 0.4s;
+}
+
+.envelope:hover {
+  transform: scale(1.1);
+}
+
+/* ---------------- Letter Box ---------------- */
+.letter {
+  margin-top: 20px;
+  background: white;
+  padding: 25px;
+  width: 340px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1.5s ease;
+  display: none;
+}
+
+.letter.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.letter h2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.letter p {
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+.sign {
+  text-align: right;
+  margin-top: 15px;
+  font-style: italic;
+}
+
+/* ---------------- Teddy inside letter ---------------- */
 .teddy {
   font-size: 50px;
   text-align: center;
@@ -105,45 +86,66 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
-    }
 
-  </style>
+/* ---------------- Floating Hearts & Teddies ---------------- */
+.floating span {
+  position: fixed;
+  bottom: -20px;
+  font-size: 30px;
+  animation: floatUp 6s linear infinite;
+  opacity: 0.7;
+  z-index: 0; /* Behind the letter */
+}
+
+/* Different positions & delays */
+.floating span:nth-child(1) { left: 10%; animation-delay: 0s; }
+.floating span:nth-child(2) { left: 30%; animation-delay: 2s; }
+.floating span:nth-child(3) { left: 50%; animation-delay: 4s; }
+.floating span:nth-child(4) { left: 70%; animation-delay: 1s; }
+.floating span:nth-child(5) { left: 90%; animation-delay: 3s; }
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
-  <!-- sealed envelope -->
+  <!-- Sealed letter -->
   <div id="env" class="envelope" onclick="openLetter()">💌</div>
 
-  <!-- letter -->
+  <!-- Letter box -->
   <div id="letterBox" class="letter">
     <div class="teddy">🧸</div>
-
     <h2>My Love 💖</h2>
     <p>
-      This little letter holds a lot of feelings.  
-      You make my days brighter and my heart happier.  
-      I’m so glad you pressed YES 💕
+      This letter carries all my feelings for you.  
+      You make my days brighter and my heart happier 💕
     </p>
     <p class="sign">— Always yours 🌸</p>
   </div>
 </div>
-  <div class="hearts">
+
+<!-- Floating hearts & teddy bears in background -->
+<div class="floating">
   <span>❤️</span>
   <span>💖</span>
-  <span>💕</span>
+  <span>🧸</span>
   <span>💘</span>
-  <span>❤️</span>
+  <span>🧸</span>
 </div>
-
 
 <script>
 function openLetter() {
-  document.getElementById("env").innerHTML = "💖"; // open look
+  document.getElementById("env").innerHTML = "💖"; // envelope opens
   document.getElementById("letterBox").classList.add("show");
 }
 </script>
 
 </body>
 </html>
+
