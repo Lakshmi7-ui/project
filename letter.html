@@ -17,13 +17,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: bgShift 20s ease infinite;
+  animation:bgShift 20s ease-in-out infinite alternate;
 }
-
 @keyframes bgShift {
-  0% { background: #fce1ec; }
-  50% { background: #fff7fb; }
-  100% { background: #fce1ec; }
+  0% { background: #191970; }   /* midnight blue */
+  50% { background: #e6d9ff; }  /* soft lavender */
+  100% { background: #191970; }
 }
 
 /* ---------------- Container ---------------- */
