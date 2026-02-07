@@ -114,6 +114,24 @@ body {
 #letterContent {
   min-height: 80px;
 }
+  .arrow {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  font-size: 26px;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.arrow:hover {
+  transform: scale(1.2);
+}
+
 </style>
 </head>
 
@@ -140,7 +158,7 @@ body {
   <span>💘</span>
   <span>🧸</span>
 </div>
-
+  <div class="arrow" onclick="openPuzzle()">➡️</div>
 <script>
 // Letter text typing effect
 const text = "This little letter carries all my feelings. You make my days brighter and my heart happier 💕";
@@ -159,6 +177,10 @@ function openLetter() {
   document.getElementById("letterBox").classList.add("show");
   typeText(); // start typing animation
 }
+  function openPuzzle() {
+  window.location.href = "puzzle.html";
+}
+
 </script>
 
 </body>
