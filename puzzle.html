@@ -1,109 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>One Last Puzzle 💕</title>
+<meta charset="UTF-8">
+<title>One Last Puzzle 💕</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-    }
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+  }
 
-    h2 {
-      color: #fff;
-      margin-bottom: 20px;
-    }
+  h2 {
+    color: white;
+    margin-bottom: 15px;
+  }
 
-    .puzzle {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-gap: 8px;
-      margin: auto;
-    }
+  /* ⏳ TIMER */
+  #timer {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background: rgba(255,255,255,0.95);
+    color: #ff2f6d;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+    z-index: 1000;
+  }
 
-    .piece {
-      width: 100px;
-      height: 100px;
-      background: #fff;
-      cursor: pointer;
-      border-radius: 10px;
-      transition: transform 0.3s, opacity 0.3s;
-    }
+  /* 💓 HEART BEAT */
+  .heartbeat {
+    animation: beat 1s infinite;
+    box-shadow: 0 0 25px rgba(255,47,109,0.9);
+  }
 
-    .piece.hidden {
+  @keyframes beat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    40% { transform: scale(1); }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  .board {
+    width: 300px;
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: auto;
+  }
+
+  .slot {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.3);
+  }
+
+  .piece {
+    width: 100px;
+    height: 100px;
+    background-image: url("puzzle.jpg");
+    background-size: 300px 300px;
+    border-radius: 10px;
+    cursor: grab;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .final {
+    display: none;
+    margin-top: 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .final img {
+    width: 320px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+
+  .message {
+    color: white;
+    font-size: 20px;
+    margin-top: 15px;
+  }
+
+  /* ✨ SPARKLES */
+  .sparkle {
+    position: fixed;
+    top: -30px;
+    font-size: 22px;
+    animation: fall linear forwards;
+    z-index: 999;
+    pointer-events: none;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(360deg);
       opacity: 0;
-      pointer-events: none;
     }
-
-    .image {
-      display: none;
-      margin-top: 20px;
-    }
-
-    .image img {
-      width: 320px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-
-    .message {
-      color: white;
-      font-size: 20px;
-      margin-top: 15px;
-      display: none;
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
 
-  <div>
-    <h2>Complete the puzzle 🧩</h2>
+<div id="timer">⏳ Time left: 60s</div>
 
-    <div class="puzzle" id="puzzle">
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-      <div class="piece" onclick="removePiece(this)"></div>
-    </div>
+<div>
+  <h2>Solve the puzzle 🧩</h2>
 
-    <div class="image" id="finalImage">
-      <img src="puzzle.jpg" alt="Our Moment 💖">
-    </div>
+  <div class="board" id="board"></div>
 
-    <div class="message" id="msg">
-      You solved my heart too 💕  
+  <div class="final" id="final">
+    <img src="puzzle.jpg" alt="Our Moment 💖">
+    <div class="message">
+      You completed my heart 💕  
       Will you be my Valentine? 🌹
     </div>
   </div>
+</div>
 
-  <script>
-    let count = 0;
+<script>
+  const board = document.getElementById("board");
+  const final = document.getElementById("final");
+  const timer = document.getElementById("timer");
 
-    function removePiece(piece) {
-      piece.classList.add("hidden");
-      count++;
+  const positions = [...Array(9).keys()];
+  let solvedCount = 0;
 
-      if (count === 9) {
-        document.getElementById("puzzle").style.display = "none";
-        document.getElementById("finalImage").style.display = "block";
-        document.getElementById("msg").style.display = "block";
+  // Create slots
+  positions.forEach(index => {
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    slot.dataset.correct = index;
+
+    slot.addEventListener("dragover", e => e.preventDefault());
+    slot.addEventListener("drop", e => {
+      const id = e.dataTransfer.getData("text");
+      const piece = document.getElementById(id);
+
+      if (slot.children.length === 0 &&
+          piece.dataset.index === slot.dataset.correct) {
+        slot.appendChild(piece);
+        piece.draggable = false;
+        solvedCount++;
+        checkWin();
       }
+    });
+
+    board.appendChild(slot);
+  });
+
+  // Create shuffled pieces
+  positions.sort(() => Math.random() - 0.5).forEach(i => {
+    const piece = document.createElement("div");
+    piece.className = "piece";
+    piece.id = "piece" + i;
+    piece.dataset.index = i;
+    piece.style.backgroundPosition =
+      `-${(i % 3) * 100}px -${Math.floor(i / 3) * 100}px`;
+    piece.draggable = true;
+
+    piece.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text", piece.id);
+    });
+
+    document.body.appendChild(piece);
+  });
+
+  function checkWin() {
+    if (solvedCount === 9) {
+      clearInterval(countdown);
+      board.classList.add("hidden");
+      final.style.display = "block";
+      timer.textContent = "🎉 You Won!";
+      timer.classList.remove("heartbeat");
+      startSparkles(); // ✨ WIN EFFECT
     }
-  </script>
+  }
+
+  // ✨ SPARKLE FALL
+  function startSparkles() {
+    const sparkleIcons = ["✨","💖","💫","🌸","⭐"];
+
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      s.textContent = sparkleIcons[Math.floor(Math.random() * sparkleIcons.length)];
+      s.style.left = Math.random() * 100 + "vw";
+      s.style.animationDuration = (2 + Math.random() * 3) + "s";
+      document.body.appendChild(s);
+
+      setTimeout(() => s.remove(), 5000);
+    }
+  }
+
+  // ⏳ TIMER + 💓 HEARTBEAT
+  let timeLeft = 60;
+  const countdown = setInterval(() => {
+    timeLeft--;
+    timer.textContent = `⏳ Time left: ${timeLeft}s`;
+
+    if (timeLeft <= 10) {
+      timer.classList.add("heartbeat");
+      timer.textContent = `💓 Hurry! ${timeLeft}s`;
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      timer.textContent = "💔 Time's up!";
+      board.classList.add("hidden");
+      timer.classList.remove("heartbeat");
+    }
+  }, 1000);
+</script>
 
 </body>
 </html>
+
 
