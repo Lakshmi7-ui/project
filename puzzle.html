@@ -13,13 +13,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
     overflow: hidden;
   }
 
   h2 {
     color: white;
     margin-bottom: 15px;
+    text-align: center;
   }
 
   /* ⏳ TIMER */
@@ -33,22 +33,27 @@
     border-radius: 25px;
     font-weight: bold;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    transition: transform 0.3s;
     z-index: 1000;
   }
 
-  /* 💓 HEART BEAT */
   .heartbeat {
     animation: beat 1s infinite;
-    box-shadow: 0 0 25px rgba(255,47,109,0.9);
+    box-shadow: 0 0 20px rgba(255,47,109,0.9);
   }
 
   @keyframes beat {
     0% { transform: scale(1); }
     25% { transform: scale(1.1); }
-    40% { transform: scale(1); }
-    60% { transform: scale(1.15); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.15); }
     100% { transform: scale(1); }
+  }
+
+  /* GAME LAYOUT */
+  .game {
+    display: flex;
+    gap: 30px;
+    align-items: center;
   }
 
   .board {
@@ -57,32 +62,40 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
-    margin: auto;
   }
 
   .slot {
     width: 100px;
     height: 100px;
     border-radius: 10px;
-    background: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.35);
+  }
+
+  .pieces-box {
+    width: 220px;
+    padding: 10px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .piece {
     width: 100px;
     height: 100px;
-    background-image: url("puzzle.jpg");
+    background-image: url("img/puzzle.jpg");
     background-size: 300px 300px;
     border-radius: 10px;
     cursor: grab;
   }
 
-  .hidden {
-    display: none;
-  }
+  .hidden { display: none; }
 
+  /* FINAL */
   .final {
     display: none;
-    margin-top: 20px;
+    text-align: center;
     position: relative;
     z-index: 10;
   }
@@ -99,14 +112,14 @@
     margin-top: 15px;
   }
 
-  /* ✨ SPARKLES */
+  /* ✨ SPARKLES (LESS) */
   .sparkle {
     position: fixed;
     top: -30px;
-    font-size: 22px;
+    font-size: 20px;
     animation: fall linear forwards;
-    z-index: 999;
     pointer-events: none;
+    z-index: 999;
   }
 
   @keyframes fall {
@@ -120,15 +133,22 @@
 
 <body>
 
+<!-- 🔊 SOUNDS -->
+<audio id="heartbeatSound" src="sounds/heartbeat.mp3" loop></audio>
+<audio id="loveSound" src="sounds/iloveyou.mp3"></audio>
+
 <div id="timer">⏳ Time left: 60s</div>
 
 <div>
   <h2>Solve the puzzle 🧩</h2>
 
-  <div class="board" id="board"></div>
+  <div class="game" id="game">
+    <div class="board" id="board"></div>
+    <div class="pieces-box" id="piecesBox"></div>
+  </div>
 
   <div class="final" id="final">
-    <img src="puzzle.jpg" alt="Our Moment 💖">
+    <img src="img/puzzle.jpg" alt="Our Moment 💖">
     <div class="message">
       You completed my heart 💕  
       Will you be my Valentine? 🌹
@@ -138,37 +158,43 @@
 
 <script>
   const board = document.getElementById("board");
+  const piecesBox = document.getElementById("piecesBox");
   const final = document.getElementById("final");
   const timer = document.getElementById("timer");
 
-  const positions = [...Array(9).keys()];
+  const heartbeatSound = document.getElementById("heartbeatSound");
+  const loveSound = document.getElementById("loveSound");
+
   let solvedCount = 0;
 
-  // Create slots
-  positions.forEach(index => {
+  // CREATE BOARD
+  for (let i = 0; i < 9; i++) {
     const slot = document.createElement("div");
     slot.className = "slot";
-    slot.dataset.correct = index;
+    slot.dataset.correct = i;
 
     slot.addEventListener("dragover", e => e.preventDefault());
     slot.addEventListener("drop", e => {
       const id = e.dataTransfer.getData("text");
       const piece = document.getElementById(id);
 
-      if (slot.children.length === 0 &&
-          piece.dataset.index === slot.dataset.correct) {
+      if (!slot.firstChild && piece.dataset.index == slot.dataset.correct) {
         slot.appendChild(piece);
         piece.draggable = false;
         solvedCount++;
+
+        loveSound.currentTime = 0;
+        loveSound.play(); // 💬 I LOVE YOU SOUND
+
         checkWin();
       }
     });
 
     board.appendChild(slot);
-  });
+  }
 
-  // Create shuffled pieces
-  positions.sort(() => Math.random() - 0.5).forEach(i => {
+  // CREATE PIECES
+  [...Array(9).keys()].sort(() => Math.random() - 0.5).forEach(i => {
     const piece = document.createElement("div");
     piece.className = "piece";
     piece.id = "piece" + i;
@@ -181,37 +207,35 @@
       e.dataTransfer.setData("text", piece.id);
     });
 
-    document.body.appendChild(piece);
+    piecesBox.appendChild(piece);
   });
 
   function checkWin() {
     if (solvedCount === 9) {
       clearInterval(countdown);
-      board.classList.add("hidden");
+      heartbeatSound.pause();
+      document.getElementById("game").classList.add("hidden");
       final.style.display = "block";
       timer.textContent = "🎉 You Won!";
       timer.classList.remove("heartbeat");
-      startSparkles(); // ✨ WIN EFFECT
+      startSparkles();
     }
   }
 
-  // ✨ SPARKLE FALL
   function startSparkles() {
-    const sparkleIcons = ["✨","💖","💫","🌸","⭐"];
-
-    for (let i = 0; i < 80; i++) {
+    const icons = ["✨","💖","💫"];
+    for (let i = 0; i < 30; i++) {   // ✨ LESS SPARKLES
       const s = document.createElement("div");
       s.className = "sparkle";
-      s.textContent = sparkleIcons[Math.floor(Math.random() * sparkleIcons.length)];
+      s.textContent = icons[Math.floor(Math.random() * icons.length)];
       s.style.left = Math.random() * 100 + "vw";
-      s.style.animationDuration = (2 + Math.random() * 3) + "s";
+      s.style.animationDuration = (2 + Math.random() * 2) + "s";
       document.body.appendChild(s);
-
-      setTimeout(() => s.remove(), 5000);
+      setTimeout(() => s.remove(), 4000);
     }
   }
 
-  // ⏳ TIMER + 💓 HEARTBEAT
+  // ⏳ TIMER + 💓 HEARTBEAT SOUND
   let timeLeft = 60;
   const countdown = setInterval(() => {
     timeLeft--;
@@ -220,12 +244,14 @@
     if (timeLeft <= 10) {
       timer.classList.add("heartbeat");
       timer.textContent = `💓 Hurry! ${timeLeft}s`;
+      if (heartbeatSound.paused) heartbeatSound.play();
     }
 
     if (timeLeft <= 0) {
       clearInterval(countdown);
+      heartbeatSound.pause();
       timer.textContent = "💔 Time's up!";
-      board.classList.add("hidden");
+      document.getElementById("game").classList.add("hidden");
       timer.classList.remove("heartbeat");
     }
   }, 1000);
@@ -233,5 +259,6 @@
 
 </body>
 </html>
+
 
 
