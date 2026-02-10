@@ -10,276 +10,172 @@
 body{
   margin:0;
   height:100vh;
-  background:radial-gradient(circle at top, #1b1f3b, #070914);
+  background:radial-gradient(circle at top,#1b1f3b,#070914);
   display:flex;
   justify-content:center;
   align-items:center;
-  font-family:'Patrick Hand', cursive;
+  font-family:'Patrick Hand',cursive;
   overflow:hidden;
 }
 
-/* ================= NOTEBOOK ================= */
-.notebook{
-  width:900px;
-  height:520px;
-  background:linear-gradient(#fffef8,#f4f1ea);
-  border-radius:18px;
-  box-shadow:0 40px 80px rgba(0,0,0,.6), inset 0 0 20px rgba(0,0,0,.08);
+/* ================= CLOSED NOTEBOOK ================= */
+.closed-book{
+  width:420px;
+  height:280px;
+  background:linear-gradient(145deg,#5a2d2d,#3b1c1c);
+  border-radius:14px;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
   display:flex;
-  perspective:2000px;
-  transition:opacity 1.2s ease;
-  z-index:5;
+  justify-content:center;
+  align-items:center;
+  color:#ffd6d6;
+  font-size:28px;
+  cursor:pointer;
+  transition:transform .6s ease;
 }
 
-.binding{
-  width:22px;
-  background:linear-gradient(#d4cfc5,#b7b1a6);
+.closed-book:hover{
+  transform:scale(1.05);
+}
+
+/* ================= OPEN NOTEBOOK ================= */
+.notebook{
+  width:860px;
+  height:500px;
+  background:linear-gradient(#fffef8,#f2efe6);
+  border-radius:18px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  position:relative;
 }
 
 .page{
-  width:50%;
+  width:70%;
+  height:80%;
   padding:50px;
-  font-size:25px;
+  font-size:26px;
   line-height:1.9;
-}
-
-.page.right{
-  transform-origin:left center;
-  transition:transform 1.4s ease;
+  background:repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 28px,
+    rgba(0,0,0,.04) 29px
+  );
+  border-radius:8px;
   cursor:pointer;
+  animation:flipIn .8s ease;
 }
 
-.page.turn{
-  transform:rotateY(-165deg);
+@keyframes flipIn{
+  from{transform:rotateY(90deg); opacity:0}
+  to{transform:rotateY(0); opacity:1}
 }
 
-/* ================= CONSTELLATION ================= */
-#constellation{
+/* ================= STAR SCENE ================= */
+.sky{
   position:fixed;
   inset:0;
-  background:radial-gradient(circle at top, #050b2e, #000);
+  background:radial-gradient(circle at top,#060b2e,#000);
   display:none;
-  z-index:20;
+  justify-content:center;
+  align-items:center;
 }
 
 .star{
-  position:absolute;
-  width:10px;
-  height:10px;
+  width:22px;
+  height:22px;
   background:white;
   border-radius:50%;
-  box-shadow:0 0 12px white;
-  cursor:pointer;
+  box-shadow:0 0 20px white,0 0 50px white;
   animation:twinkle 2s infinite ease-in-out;
+  cursor:pointer;
 }
 
 @keyframes twinkle{
-  0%,100%{opacity:.5; transform:scale(1);}
-  50%{opacity:1; transform:scale(1.4);}
+  0%,100%{opacity:.6; transform:scale(1)}
+  50%{opacity:1; transform:scale(1.4)}
 }
 
+/* ================= HEART CONSTELLATION ================= */
 svg{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:21;
+  display:none;
 }
 
 line{
   stroke:red;
   stroke-width:3;
-  filter:drop-shadow(0 0 8px red);
-}
-
-/* ================= PASSWORD ================= */
-.password-box{
-  position:fixed;
-  inset:0;
-  display:none;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  color:white;
-  z-index:30;
-}
-
-.password-box input{
-  padding:10px 16px;
-  font-size:20px;
-  border:none;
-  border-radius:8px;
-  margin-top:10px;
-}
-
-.password-box button{
-  margin-top:15px;
-  padding:8px 20px;
-  font-size:18px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  background:#ff5a7a;
-  color:white;
+  filter:drop-shadow(0 0 10px red);
 }
 </style>
 </head>
 
 <body>
 
-<!-- NOTEBOOK -->
+<!-- CLOSED NOTEBOOK -->
+<div class="closed-book" id="closedBook">
+  📕 Our Story
+</div>
+
+<!-- OPEN NOTEBOOK -->
 <div class="notebook" id="book">
-  <div class="page left" id="leftPage">
-    <h2>Page One ✨</h2>
-    <p>Some feelings don’t rush.</p>
-    <p>They wait… quietly.</p>
-  </div>
-
-  <div class="binding"></div>
-
-  <div class="page right" id="rightPage" onclick="nextStep()">
-    <h2>Page Two 🌙</h2>
-    <p>Moments align…</p>
-    <p>Just like this.</p>
-  </div>
+  <div class="page" id="page" onclick="nextPage()"></div>
 </div>
 
-<!-- CONSTELLATION -->
-<div id="constellation"></div>
-<svg id="lines"></svg>
-
-<!-- PASSWORD -->
-<div class="password-box" id="passwordBox">
-  <h2>🔐 One word unlocks the last page</h2>
-  <input type="password" id="passwordInput" placeholder="Enter word">
-  <button onclick="checkPassword()">Unlock ✨</button>
+<!-- STAR SKY -->
+<div class="sky" id="sky">
+  <div class="star" onclick="showHeart()"></div>
 </div>
+
+<!-- HEART -->
+<svg id="heart"></svg>
 
 <script>
-let step = 1;
+let pageNo = 0;
 
-/* ================= NOTEBOOK FLOW ================= */
-function nextStep(){
-  document.getElementById("rightPage").classList.add("turn");
+const pages = [
+  `<h2>Page One ✨</h2><p>Some feelings don’t rush.</p><p>They wait… quietly.</p>`,
+  `<h2>Page Two 🌙</h2><p>Some moments feel written in the stars.</p>`
+];
 
-  setTimeout(()=>{
-    if(step === 1) showConstellation();
-    else if(step === 3) showPassword();
-  },1300);
-}
-
-/* ================= HEART CONSTELLATION ================= */
 const heartPoints = [
   [50,18],[40,28],[30,40],[30,55],
   [40,65],[50,75],[60,65],[70,55],
   [70,40],[60,28],[50,18]
 ];
 
-let connected = false;
-
-function showConstellation(){
-  step = 2;
-  book.style.opacity = 0;
-
-  setTimeout(()=>{
-    book.style.display = "none";
-    constellation.style.display = "block";
-    createStars();
-  },900);
-}
-
-function createStars(){
-  heartPoints.forEach(([x,y])=>{
-    const s = document.createElement("div");
-    s.className = "star";
-    s.style.left = x+"%";
-    s.style.top = y+"%";
-    s.onclick = ()=>{
-      if(!connected){
-        connected = true;
-        connectStars();
-      }
-    };
-    constellation.appendChild(s);
-  });
-}
-
-function connectStars(){
-  svg.setAttribute("viewBox","0 0 100 100");
-  svg.setAttribute("preserveAspectRatio","none");
-
-  for(let i=1;i<heartPoints.length;i++){
-    const l = document.createElementNS("http://www.w3.org/2000/svg","line");
-    l.setAttribute("x1",heartPoints[i-1][0]);
-    l.setAttribute("y1",heartPoints[i-1][1]);
-    l.setAttribute("x2",heartPoints[i][0]);
-    l.setAttribute("y2",heartPoints[i][1]);
-    lines.appendChild(l);
-  }
-
-  setTimeout(loadPageThree,1200);
-}
-
-/* ================= PAGE 3 ================= */
-function loadPageThree(){
-  constellation.style.display="none";
-  lines.innerHTML="";
-  constellation.innerHTML="";
-
+/* OPEN NOTEBOOK */
+closedBook.onclick = ()=>{
+  closedBook.style.display="none";
   book.style.display="flex";
-  book.style.opacity=1;
+  page.innerHTML = pages[0];
+  pageNo = 1;
+};
 
-  leftPage.innerHTML = `
-    <h2>Page Three 🌌</h2>
-    <p>Some moments change everything.</p>
-  `;
-
-  rightPage.innerHTML = `
-    <h2>Turn once more ✨</h2>
-    <p>The last page awaits.</p>
-  `;
-
-  rightPage.classList.remove("turn");
-  step = 3;
-}
-
-/* ================= PASSWORD ================= */
-function showPassword(){
-  book.style.opacity=0;
-  setTimeout(()=>{
+/* PAGE TURN */
+function nextPage(){
+  if(pageNo === 1){
+    page.innerHTML = pages[1];
+    pageNo = 2;
+  }
+  else if(pageNo === 2){
     book.style.display="none";
-    passwordBox.style.display="flex";
-  },900);
-}
-
-function checkPassword(){
-  if(passwordInput.value.toLowerCase() === "kiwi"){
-    passwordBox.style.display="none";
-    showPageFour();
-  } else {
-    alert("Try again ✨");
+    sky.style.display="flex";
   }
 }
 
-/* ================= PAGE 4 ================= */
-function showPageFour(){
-  book.style.display="flex";
-  book.style.opacity=1;
+/* STAR → HEART */
+function showHeart(){
+  sky.style.display="none";
+  heart.style.display="block";
+  heart.setAttribute("viewBox","0 0 100 100");
 
-  leftPage.innerHTML = `
-    <h2>Page Four 💖</h2>
-    <p>Some stories don’t need an ending.</p>
-    <p>They begin here.</p>
-  `;
+  for(let i=1;i<h
 
-  rightPage.innerHTML = `
-    <h2>✨</h2>
-    <p>Thank you for reaching the end.</p>
-  `;
-}
-</script>
-
-</body>
-</html>
 
 
 
