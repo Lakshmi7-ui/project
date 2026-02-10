@@ -2,216 +2,261 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Notebook of Stars ✨</title>
+<title>Our Story ✨</title>
 
+<!-- Handwritten font -->
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
   height:100vh;
-  background:radial-gradient(circle at top,#0d1333,#050714);
+  background:radial-gradient(circle at top, #1b1f3b, #090b18);
   display:flex;
   justify-content:center;
   align-items:center;
-  font-family:'Patrick Hand',cursive;
+  font-family:'Patrick Hand', cursive;
   overflow:hidden;
 }
 
-/* NOTEBOOK */
+/* ================= NOTEBOOK ================= */
 .notebook{
-  width:900px;
-  height:520px;
-  display:flex;
+  width:880px;
+  height:500px;
   background:#fffdf6;
   border-radius:18px;
   box-shadow:0 40px 80px rgba(0,0,0,.6);
+  display:flex;
   perspective:1800px;
   position:relative;
 }
 
-/* PAGES */
+/* binding */
+.binding{
+  width:20px;
+  background:linear-gradient(#d6d1c7,#b9b4aa);
+}
+
+/* pages */
 .page{
   width:50%;
-  padding:50px;
-  font-size:26px;
+  padding:45px;
+  font-size:24px;
   line-height:1.8;
   position:relative;
 }
 
-.left{
-  border-right:1px solid #e6e0d8;
-}
-
-.right{
+.page.right{
   transform-origin:left center;
-  transition:transform 1.4s ease;
+  transition:transform 1.3s ease;
   cursor:pointer;
 }
 
-.right.turn{
+.page.turn{
   transform:rotateY(-160deg);
 }
 
-/* NEXT PAGE */
-.next{
+/* curled page effect */
+.page:after{
+  content:"";
   position:absolute;
-  inset:0;
-  padding:50px;
-  display:none;
+  top:0;
+  right:0;
+  width:30px;
+  height:100%;
+  background:linear-gradient(to right, rgba(0,0,0,0.05), transparent);
 }
 
-.right.turn .next{
-  display:block;
-}
-
-/* STARS */
+/* ================= STARS ================= */
 .star{
   position:absolute;
-  width:8px;
-  height:8px;
-  background:white;
+  width:14px;
+  height:14px;
+  background:radial-gradient(circle, #fff 40%, #cfe3ff 65%, transparent 75%);
   border-radius:50%;
-  box-shadow:0 0 12px white;
+  box-shadow:
+    0 0 8px rgba(255,255,255,.9),
+    0 0 18px rgba(180,200,255,.6);
   cursor:pointer;
-  transition:transform .3s, box-shadow .3s;
+  animation:twinkle 3s infinite ease-in-out;
+  z-index:3;
 }
 
-.star:hover{
-  transform:scale(1.5);
-  box-shadow:0 0 20px #ffd;
+@keyframes twinkle{
+  0%{opacity:.6; transform:scale(1);}
+  50%{opacity:1; transform:scale(1.2);}
+  100%{opacity:.7; transform:scale(1);}
 }
 
-/* LINES */
-canvas{
+/* constellation lines */
+svg{
   position:absolute;
   inset:0;
   pointer-events:none;
+  z-index:2;
 }
 
-/* LOCK */
+/* ================= LOCK ================= */
 .lock{
-  font-size:40px;
+  font-size:42px;
   text-align:center;
   margin-top:40px;
-}
-
-/* PASSWORD */
-input{
-  font-family:'Patrick Hand';
-  font-size:22px;
-  padding:8px;
-  width:80%;
-}
-
-button{
-  font-family:'Patrick Hand';
-  font-size:22px;
-  margin-top:10px;
   cursor:pointer;
 }
 
+input{
+  padding:8px;
+  font-family:inherit;
+  font-size:18px;
+  margin-top:10px;
+}
+
+/* hint */
 .hint{
   position:absolute;
   bottom:20px;
   right:30px;
-  font-size:16px;
-  color:#aaa;
+  font-size:15px;
+  color:#999;
 }
 </style>
 </head>
 
 <body>
 
+<svg id="lines"></svg>
+
 <div class="notebook">
 
-<!-- PAGE 1 -->
-<div class="page left">
-  <p>Some connections don’t need proof.</p>
-  <p>They just… exist.</p>
-</div>
+  <!-- PAGE 1 -->
+  <div class="page left">
+    <h2>✨ Page One</h2>
+    <p>
+      Some connections don’t need proof.<br>
+      They just… exist.
+    </p>
+    <p>
+      Quiet. Certain. Real.
+    </p>
+  </div>
 
-<div class="page right" onclick="turn(1)"></div>
+  <div class="binding"></div>
 
-<!-- PAGE 2 -->
-<div class="page left next">
-  <p>Like stars — distant, yet perfectly placed.</p>
-</div>
-
-<div class="page right next" onclick="turn(2)"></div>
-
-<!-- PAGE 3 -->
-<div class="page left next">
-  <p>Even chaos has a pattern…</p>
-</div>
-
-<div class="page right next" onclick="turn(3)">
-  <p style="text-align:center;">Touch the stars. Let them connect ✨</p>
-  <canvas id="lines"></canvas>
-
-  <!-- STARS -->
-  <div class="star" style="top:120px;left:200px" onclick="connect(this)"></div>
-  <div class="star" style="top:80px;left:320px" onclick="connect(this)"></div>
-  <div class="star" style="top:160px;left:440px" onclick="connect(this)"></div>
-  <div class="star" style="top:260px;left:380px" onclick="connect(this)"></div>
-  <div class="star" style="top:260px;left:260px" onclick="connect(this)"></div>
-</div>
-
-<!-- PAGE 4 (LOCKED) -->
-<div class="page left next">
-  <div class="lock">🔒</div>
-  <p style="text-align:center;">Enter the word that opens everything</p>
-  <input id="pw" placeholder="password">
-  <button onclick="check()">Unlock</button>
-</div>
-
-<div class="page right next">
-  <h2>💖</h2>
-  <p>
-    And somehow…  
-    everything led me to you.
-  </p>
-</div>
+  <!-- PAGE 2 -->
+  <div class="page right" onclick="turnPage(1)">
+    <h2>🌙 Page Two</h2>
+    <p>
+      Like stars — distant,<br>
+      yet perfectly placed.
+    </p>
+    <div class="hint">Click page →</div>
+  </div>
 
 </div>
 
 <script>
-let page=0;
-let starsClicked=0;
-const ctx=document.getElementById("lines").getContext("2d");
-let last=null;
-
-function turn(n){
-  if(n===3 && starsClicked<5) return;
-  document.querySelectorAll('.right')[n].classList.add("turn");
-}
-
-function connect(el){
-  const r=el.getBoundingClientRect();
-  const x=r.left+r.width/2;
-  const y=r.top+r.height/2;
-
-  if(last){
-    ctx.strokeStyle="white";
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(last.x,last.y);
-    ctx.lineTo(x,y);
-    ctx.stroke();
+/* ================= PAGE TURN ================= */
+let page = 1;
+function turnPage(step){
+  if(step===1){
+    document.querySelector('.page.right').classList.add('turn');
+    setTimeout(loadPageThree,1200);
   }
-  last={x,y};
-  el.style.pointerEvents="none";
-  starsClicked++;
 }
 
-function check(){
-  if(document.getElementById("pw").value.toLowerCase()==="forever"){
-    turn(3);
+/* ================= PAGE 3 ================= */
+function loadPageThree(){
+  document.body.innerHTML += `
+  <svg id="lines"></svg>
+  <div class="notebook">
+    <div class="page left">
+      <h2>🌌 Page Three</h2>
+      <p>Touch the stars.</p>
+      <p>Let them connect.</p>
+    </div>
+    <div class="binding"></div>
+    <div class="page right" onclick="turnFinal()">
+      <h2>✨ Make a heart</h2>
+      <div class="hint">Stars → then page</div>
+    </div>
+  </div>`;
+  createStars();
+}
+
+/* ================= STARS ================= */
+const starPositions = [
+  [38,38],[44,32],[50,30],[56,32],[62,38],
+  [42,46],[50,54],[58,46]
+];
+let clicked = [];
+
+function createStars(){
+  starPositions.forEach((p,i)=>{
+    const s=document.createElement("div");
+    s.className="star";
+    s.style.left=p[0]+"vw";
+    s.style.top=p[1]+"vh";
+    s.style.animationDelay=Math.random()*3+"s";
+    s.onclick=()=>selectStar(s,p);
+    document.body.appendChild(s);
+  });
+}
+
+function selectStar(el,pos){
+  if(clicked.includes(pos)) return;
+  clicked.push(pos);
+  if(clicked.length>1){
+    drawLine(clicked[clicked.length-2],pos);
+  }
+}
+
+function drawLine(a,b){
+  const svg=document.getElementById("lines");
+  const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+  l.setAttribute("x1",a[0]+"%");
+  l.setAttribute("y1",a[1]+"%");
+  l.setAttribute("x2",b[0]+"%");
+  l.setAttribute("y2",b[1]+"%");
+  l.setAttribute("stroke","rgba(255,180,200,.8)");
+  l.setAttribute("stroke-width","2");
+  svg.appendChild(l);
+}
+
+/* ================= FINAL LOCK PAGE ================= */
+function turnFinal(){
+  if(clicked.length<8){
+    alert("Connect all stars ✨");
+    return;
+  }
+  document.body.innerHTML=`
+  <div class="notebook">
+    <div class="page left">
+      <h2>🔐 Final Page</h2>
+      <p>This page opens with one word.</p>
+      <input id="pass" placeholder="Password">
+      <div class="lock" onclick="unlock()">🔒</div>
+    </div>
+    <div class="binding"></div>
+    <div class="page right">
+      <h2>💖</h2>
+      <p id="finalText"></p>
+    </div>
+  </div>`;
+}
+
+function unlock(){
+  const v=document.getElementById("pass").value.toLowerCase();
+  if(v==="love"){
+    document.getElementById("finalText").innerHTML=
+      "If stars can align into a heart,<br>maybe this was meant too 💫";
+  }else{
+    alert("Try again ✨");
   }
 }
 </script>
 
 </body>
 </html>
+
 
 
