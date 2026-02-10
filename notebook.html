@@ -4,134 +4,170 @@
 <meta charset="UTF-8">
 <title>My Notebook 💕</title>
 
-<!-- ✍️ Handwritten Font -->
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
   height: 100vh;
-  background: radial-gradient(circle at top, #1b1f3b, #0b0d1a);
+  background: radial-gradient(circle at top, #070b2a, #02010a);
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Patrick Hand', cursive;
   overflow: hidden;
-  color: #333;
 }
 
-/* 🌌 STAR BACKGROUND */
+/* 🌌 REALISTIC STAR FIELD */
 .star {
   position: fixed;
-  width: 4px;
-  height: 4px;
-  background: white;
   border-radius: 50%;
-  opacity: 0;
-  animation: twinkle 2s infinite;
+  background: radial-gradient(circle, #ffffff, #dfe9ff);
+  box-shadow: 0 0 10px rgba(255,255,255,0.9);
+  animation: twinkle ease-in-out infinite;
+  cursor: pointer;
+  z-index: 1;
 }
 
 @keyframes twinkle {
+  0%,100% { opacity: 0.7; }
   50% { opacity: 1; }
 }
 
-/* NOTEBOOK */
+/* ✨ CONSTELLATION LINES */
+.line {
+  position: fixed;
+  height: 2px;
+  background: linear-gradient(to right, #ffd6e7, #ff9ecb);
+  transform-origin: left;
+  animation: draw 0.8s forwards;
+  z-index: 2;
+}
+
+@keyframes draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* 📘 NOTEBOOK */
 .notebook {
-  width: 820px;
-  height: 480px;
+  width: 960px;
+  height: 560px;
   display: flex;
-  background: #fffdf7;
-  border-radius: 16px;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.6);
-  perspective: 1600px;
-  position: relative;
+  border-radius: 18px;
+  background: #fff6e5;
+  box-shadow:
+    0 45px 90px rgba(0,0,0,0.7),
+    inset 0 0 0 1px rgba(0,0,0,0.08);
+  perspective: 2200px;
   z-index: 5;
 }
 
-/* LEFT PAGE */
-.page.left {
+/* 📄 PAGES */
+.page {
   width: 50%;
-  padding: 45px;
+  padding: 58px;
   font-size: 24px;
   line-height: 1.8;
-  border-right: 1px solid #eee;
-}
-
-/* BINDING */
-.binding {
-  width: 18px;
-  background: linear-gradient(#ddd, #bbb);
-}
-
-/* RIGHT PAGE */
-.page.right {
-  width: 50%;
-  padding: 45px;
-  font-size: 23px;
-  cursor: pointer;
-  transform-origin: left center;
-  transition: transform 1.3s ease;
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.05), transparent 10%),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.015),
+      rgba(0,0,0,0.015) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    #fffaf0;
   position: relative;
 }
 
-/* TURN PAGE */
-.page.right.turn {
+/* INNER SHADOW */
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 26px;
+  background: linear-gradient(to right, rgba(0,0,0,0.18), transparent);
+}
+
+.page:first-child::before {
+  right: 0;
+}
+
+.page:last-child::before {
+  left: 0;
+  transform: rotateY(180deg);
+}
+
+/* 📎 BINDING */
+.binding {
+  width: 26px;
+  background:
+    linear-gradient(
+      to bottom,
+      #a99f90,
+      #d8d2c4,
+      #a99f90
+    );
+  box-shadow:
+    inset 0 0 8px rgba(0,0,0,0.5);
+}
+
+/* 📖 PAGE TURN */
+.right {
+  transform-origin: left center;
+  transition: transform 1.4s ease;
+  cursor: pointer;
+}
+
+.right.turn {
   transform: rotateY(-160deg);
 }
 
 /* NEXT PAGE */
-.next-page {
+.next {
   position: absolute;
   inset: 0;
-  padding: 45px;
-  background: #fffdf7;
+  padding: 58px;
+  background: #fffaf0;
   display: none;
-  font-size: 26px;
 }
 
-.page.right.turn .next-page {
+.right.turn .next {
   display: block;
 }
 
 /* 🔐 LOCK */
 .lock {
-  font-size: 40px;
+  font-size: 44px;
   text-align: center;
-  margin-top: 40px;
-  cursor: pointer;
-  animation: pulse 1.5s infinite;
+  margin-top: 60px;
+  animation: pulse 1.6s infinite;
 }
 
 @keyframes pulse {
-  50% { transform: scale(1.15); }
+  50% { transform: scale(1.1); }
 }
 
-.lock-text {
+.password {
+  margin-top: 20px;
   text-align: center;
+}
+
+input {
+  padding: 10px 16px;
   font-size: 18px;
-  color: #777;
-}
-
-/* 🗝️ KEY */
-.key {
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  font-size: 42px;
-  cursor: pointer;
-  animation: float 3s ease-in-out infinite;
-  z-index: 10;
-}
-
-@keyframes float {
-  50% { transform: translateY(-10px); }
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
 /* HINT */
 .hint {
   position: absolute;
-  bottom: 20px;
-  right: 30px;
+  bottom: 24px;
+  right: 32px;
   font-size: 15px;
   color: #aaa;
 }
@@ -140,89 +176,149 @@ body {
 
 <body>
 
-<!-- 🔊 PAGE TURN SOUND -->
-<audio id="pageSound" src="sounds/page-turn.mp3"></audio>
+<div class="notebook" id="notebook">
 
-<!-- 🗝️ FLOATING KEY -->
-<div class="key" id="key" onclick="unlock()">🗝️</div>
-
-<div class="notebook">
-
-  <!-- LEFT PAGE -->
-  <div class="page left">
+  <!-- PAGE 1 -->
+  <div class="page">
     <h2>Dear You 💕</h2>
     <p>
-      Some feelings stay locked inside  
-      not because they’re hidden…
+      Some feelings don’t arrive loudly.  
+      They stay… quietly.
     </p>
     <p>
-      But because they matter too much  
-      to open without trust.
+      And before you notice,  
+      they become home.
     </p>
   </div>
 
   <div class="binding"></div>
 
-  <!-- RIGHT PAGE -->
-  <div class="page right" id="rightPage" onclick="turnPage()">
-    <div id="locked">
-      <div class="lock">🔒</div>
-      <div class="lock-text">Only the key can open this</div>
-    </div>
+  <!-- PAGE 2 -->
+  <div class="page right" onclick="turnFirst()">
+    <p>
+      I never planned this.  
+      But somehow, every thought  
+      started leading to you.
+    </p>
 
-    <div class="next-page">
-      <h2>🌌</h2>
+    <div class="next">
+      <h2>🌙</h2>
       <p>
-        Just like these stars…  
-        everything somehow aligned.
+        Even silence feels full  
+        when it’s shared.
       </p>
       <p>
-        And led me to you 💖
+        That’s how I knew.
       </p>
     </div>
 
-    <div class="hint">Unlock → click page 📖</div>
+    <div class="hint">Click page 📖</div>
   </div>
 
 </div>
 
 <script>
-let unlocked = false;
-
-function unlock() {
-  unlocked = true;
-  document.getElementById("locked").innerHTML = "🔓<br><small>Unlocked</small>";
-  document.getElementById("key").style.display = "none";
-  createStars();
+/* PAGE FLOW */
+function turnFirst() {
+  document.querySelector(".right").classList.add("turn");
+  setTimeout(loadThirdPage, 1400);
 }
 
-function turnPage() {
-  if (!unlocked) return;
-  const sound = document.getElementById("pageSound");
-  sound.currentTime = 0;
-  sound.play();
-  document.getElementById("rightPage").classList.add("turn");
+function loadThirdPage() {
+  document.getElementById("notebook").innerHTML = `
+    <div class="page">
+      <h2>✨</h2>
+      <p>
+        Some connections don’t need proof.  
+        They just… exist.
+      </p>
+      <p>
+        Like stars — distant,  
+        yet perfectly placed.
+      </p>
+    </div>
+
+    <div class="binding"></div>
+
+    <div class="page right" onclick="showStars()">
+      <p>
+        Touch the stars.  
+        Let them connect.
+      </p>
+
+      <div class="next">
+        <div class="lock">🔒</div>
+        <div class="password">
+          <p>One word. One truth.</p>
+          <input id="pass" placeholder="password">
+        </div>
+      </div>
+
+      <div class="hint">Stars → then page ✨</div>
+    </div>
+  `;
 }
 
-/* 🌌 STAR MAP */
-function createStars() {
-  const positions = [
-    [40,30],[50,25],[60,30],
-    [35,40],[65,40],
-    [45,55],[55,55],
-    [50,70]
-  ];
+/* 🌟 HEART CONSTELLATION */
+const heart = [
+  [45,35],[50,30],[55,35],
+  [40,45],[60,45],
+  [45,60],[55,60],
+  [50,75]
+];
 
-  positions.forEach((pos, i) => {
-    const star = document.createElement("div");
-    star.className = "star";
-    star.style.left = pos[0] + "vw";
-    star.style.top = pos[1] + "vh";
-    star.style.animationDelay = i * 0.4 + "s";
-    document.body.appendChild(star);
+let selected = [];
+
+function showStars() {
+  heart.forEach((p,i) => {
+    const s = document.createElement("div");
+    s.className = "star";
+    const size = 3 + Math.random() * 4;
+    s.style.width = size+"px";
+    s.style.height = size+"px";
+    s.style.left = p[0]+"vw";
+    s.style.top = p[1]+"vh";
+    s.style.animationDuration = (2 + Math.random()*2)+"s";
+    s.onclick = () => connectStar(s);
+    document.body.appendChild(s);
   });
 }
+
+function connectStar(star) {
+  selected.push(star);
+  if (selected.length > 1) {
+    drawLine(selected[selected.length-2], star);
+  }
+}
+
+function drawLine(a,b) {
+  const r1 = a.getBoundingClientRect();
+  const r2 = b.getBoundingClientRect();
+  const dx = r2.left - r1.left;
+  const dy = r2.top - r1.top;
+  const len = Math.hypot(dx,dy);
+  const ang = Math.atan2(dy,dx) * 180 / Math.PI;
+
+  const line = document.createElement("div");
+  line.className = "line";
+  line.style.width = len+"px";
+  line.style.left = r1.left+"px";
+  line.style.top = r1.top+"px";
+  line.style.transform = `rotate(${ang}deg)`;
+  document.body.appendChild(line);
+}
+
+/* 🔓 PASSWORD */
+document.addEventListener("input", e => {
+  if (e.target.id === "pass" && e.target.value.toLowerCase() === "love") {
+    document.querySelector(".right").classList.add("turn");
+    setTimeout(() => {
+      window.location.href = "proposal.html";
+    }, 1400);
+  }
+});
 </script>
 
 </body>
 </html>
+
