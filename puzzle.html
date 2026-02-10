@@ -101,18 +101,39 @@
   }
 
   .final img {
-    width: 320px;
+    width: 220px;
     border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    margin: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
   }
 
   .message {
     color: white;
     font-size: 20px;
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
-  /* ✨ SPARKLES (LESS) */
+  /* NOTEBOOK BUTTON */
+  #notebookBtn {
+    display: none;
+    margin: 25px auto 0;
+    padding: 14px 34px;
+    font-size: 18px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #ff4b7d, #ff758c);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(255,75,125,0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  #notebookBtn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 15px 35px rgba(255,75,125,0.7);
+  }
+
+  /* ✨ SPARKLES */
   .sparkle {
     position: fixed;
     top: -30px;
@@ -134,8 +155,8 @@
 <body>
 
 <!-- 🔊 SOUNDS -->
-<audio id="heartbeatSound" src="sounds/heartbeat.mp3" loop></audio>
-<audio id="loveSound" src="sounds/iloveyou.mp3"></audio>
+<audio id="heartbeatSound" src="heartbeat.mp3" loop></audio>
+<audio id="loveSound" src="iloveyou.mp3"></audio>
 
 <div id="timer">⏳ Time left: 60s</div>
 
@@ -154,6 +175,10 @@
       Will you be my Valentine? 🌹
     </div>
   </div>
+
+  <button id="notebookBtn" onclick="goToNotebook()">
+    Open My Notebook 📖💖
+  </button>
 </div>
 
 <script>
@@ -184,7 +209,7 @@
         solvedCount++;
 
         loveSound.currentTime = 0;
-        loveSound.play(); // 💬 I LOVE YOU SOUND
+        loveSound.play();
 
         checkWin();
       }
@@ -219,12 +244,13 @@
       timer.textContent = "🎉 You Won!";
       timer.classList.remove("heartbeat");
       startSparkles();
+      document.getElementById("notebookBtn").style.display = "block";
     }
   }
 
   function startSparkles() {
     const icons = ["✨","💖","💫"];
-    for (let i = 0; i < 30; i++) {   // ✨ LESS SPARKLES
+    for (let i = 0; i < 30; i++) {
       const s = document.createElement("div");
       s.className = "sparkle";
       s.textContent = icons[Math.floor(Math.random() * icons.length)];
@@ -235,7 +261,11 @@
     }
   }
 
-  // ⏳ TIMER + 💓 HEARTBEAT SOUND
+  function goToNotebook() {
+    window.location.href = "notebook.html";
+  }
+
+  // ⏳ TIMER + 💓 HEARTBEAT
   let timeLeft = 60;
   const countdown = setInterval(() => {
     timeLeft--;
@@ -259,6 +289,3 @@
 
 </body>
 </html>
-
-
-
