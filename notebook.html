@@ -2,179 +2,177 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Our Story ✨</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
-
+<title>Our Story</title>
 <style>
-body{
-  margin:0;
-  height:100vh;
-  background:radial-gradient(circle at top,#1b1f3b,#070914);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:'Patrick Hand',cursive;
-  overflow:hidden;
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* ================= CLOSED NOTEBOOK ================= */
-.closed-book{
-  width:420px;
-  height:280px;
-  background:linear-gradient(145deg,#5a2d2d,#3b1c1c);
-  border-radius:14px;
-  box-shadow:0 20px 40px rgba(0,0,0,.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#ffd6d6;
-  font-size:28px;
-  cursor:pointer;
-  transition:transform .6s ease;
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #0b1026, #02030d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.closed-book:hover{
-  transform:scale(1.05);
+/* CLOSED NOTEBOOK */
+#notebook {
+  width: 360px;
+  height: 240px;
+  background: linear-gradient(145deg, #6b2c2c, #3a1414);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffd6d6;
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.4s ease;
 }
 
-/* ================= OPEN NOTEBOOK ================= */
-.notebook{
-  width:860px;
-  height:500px;
-  background:linear-gradient(#fffef8,#f2efe6);
-  border-radius:18px;
-  box-shadow:0 40px 80px rgba(0,0,0,.6);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  position:relative;
+#notebook:hover {
+  transform: scale(1.05);
 }
 
-.page{
-  width:70%;
-  height:80%;
-  padding:50px;
-  font-size:26px;
-  line-height:1.9;
-  background:repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 28px,
-    rgba(0,0,0,.04) 29px
+/* OPEN NOTEBOOK PAGE */
+.page {
+  width: 420px;
+  height: 280px;
+  background: #fff7ec;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  padding: 30px;
+  display: none;
+  cursor: pointer;
+  animation: pageIn 0.6s ease;
+}
+
+@keyframes pageIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.page h2 {
+  margin-top: 0;
+  color: #5a2a2a;
+}
+
+/* STAR */
+#star {
+  display: none;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, #fff, #ffd700);
+  clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%,
+    79% 91%, 50% 70%, 21% 91%, 32% 57%,
+    2% 35%, 39% 35%
   );
-  border-radius:8px;
-  cursor:pointer;
-  animation:flipIn .8s ease;
+  animation: twinkle 1.5s infinite alternate;
+  cursor: pointer;
 }
 
-@keyframes flipIn{
-  from{transform:rotateY(90deg); opacity:0}
-  to{transform:rotateY(0); opacity:1}
+@keyframes twinkle {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(1.2); opacity: 1; }
 }
 
-/* ================= STAR SCENE ================= */
-.sky{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at top,#060b2e,#000);
-  display:none;
-  justify-content:center;
-  align-items:center;
+/* HEART CONSTELLATION */
+#heart {
+  display: none;
+  position: absolute;
+  width: 220px;
+  height: 200px;
 }
 
-.star{
-  width:22px;
-  height:22px;
-  background:white;
-  border-radius:50%;
-  box-shadow:0 0 20px white,0 0 50px white;
-  animation:twinkle 2s infinite ease-in-out;
-  cursor:pointer;
+.star-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: red;
+  border-radius: 50%;
+  box-shadow: 0 0 12px red;
 }
 
-@keyframes twinkle{
-  0%,100%{opacity:.6; transform:scale(1)}
-  50%{opacity:1; transform:scale(1.4)}
+/* FINAL PAGE */
+#page4 {
+  display: none;
 }
 
-/* ================= HEART CONSTELLATION ================= */
-svg{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  display:none;
-}
-
-line{
-  stroke:red;
-  stroke-width:3;
-  filter:drop-shadow(0 0 10px red);
-}
 </style>
 </head>
-
 <body>
 
 <!-- CLOSED NOTEBOOK -->
-<div class="closed-book" id="closedBook">
-  📕 Our Story
+<div id="notebook" onclick="openNotebook()">📕 Our Story</div>
+
+<!-- PAGES -->
+<div class="page" id="page1" onclick="nextPage(1)">
+  <h2>Page 1</h2>
+  <p>This is where our story begins… ✨</p>
+  <p>(Click to continue)</p>
 </div>
 
-<!-- OPEN NOTEBOOK -->
-<div class="notebook" id="book">
-  <div class="page" id="page" onclick="nextPage()"></div>
+<div class="page" id="page2" onclick="nextPage(2)">
+  <h2>Page 2</h2>
+  <p>Every moment led us closer… 💫</p>
+  <p>(Click to continue)</p>
 </div>
 
-<!-- STAR SKY -->
-<div class="sky" id="sky">
-  <div class="star" onclick="showHeart()"></div>
-</div>
+<!-- STAR -->
+<div id="star" onclick="showHeart()"></div>
 
 <!-- HEART -->
-<svg id="heart"></svg>
+<div id="heart">
+  <div class="star-dot" style="top:20px; left:100px"></div>
+  <div class="star-dot" style="top:50px; left:60px"></div>
+  <div class="star-dot" style="top:50px; left:140px"></div>
+  <div class="star-dot" style="top:90px; left:40px"></div>
+  <div class="star-dot" style="top:90px; left:160px"></div>
+  <div class="star-dot" style="top:140px; left:100px"></div>
+</div>
+
+<!-- FINAL PAGE -->
+<div class="page" id="page4">
+  <h2>Page 4</h2>
+  <p>And that’s how our hearts aligned ❤️</p>
+</div>
 
 <script>
-let pageNo = 0;
+function openNotebook() {
+  document.getElementById('notebook').style.display = 'none';
+  document.getElementById('page1').style.display = 'block';
+}
 
-const pages = [
-  `<h2>Page One ✨</h2><p>Some feelings don’t rush.</p><p>They wait… quietly.</p>`,
-  `<h2>Page Two 🌙</h2><p>Some moments feel written in the stars.</p>`
-];
-
-const heartPoints = [
-  [50,18],[40,28],[30,40],[30,55],
-  [40,65],[50,75],[60,65],[70,55],
-  [70,40],[60,28],[50,18]
-];
-
-/* OPEN NOTEBOOK */
-closedBook.onclick = ()=>{
-  closedBook.style.display="none";
-  book.style.display="flex";
-  page.innerHTML = pages[0];
-  pageNo = 1;
-};
-
-/* PAGE TURN */
-function nextPage(){
-  if(pageNo === 1){
-    page.innerHTML = pages[1];
-    pageNo = 2;
-  }
-  else if(pageNo === 2){
-    book.style.display="none";
-    sky.style.display="flex";
+function nextPage(n) {
+  document.getElementById('page' + n).style.display = 'none';
+  if (n === 1) {
+    document.getElementById('page2').style.display = 'block';
+  } else {
+    document.getElementById('star').style.display = 'block';
   }
 }
 
-/* STAR → HEART */
-function showHeart(){
-  sky.style.display="none";
-  heart.style.display="block";
-  heart.setAttribute("viewBox","0 0 100 100");
+function showHeart() {
+  document.getElementById('star').style.display = 'none';
+  const heart = document.getElementById('heart');
+  heart.style.display = 'block';
 
-  for(let i=1;i<h
+  setTimeout(() => {
+    heart.style.display = 'none';
+    document.getElementById('page4').style.display = 'block';
+  }, 2000);
+}
+</script>
+
+</body>
+</html>
+
 
 
 
