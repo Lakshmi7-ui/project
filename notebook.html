@@ -27,7 +27,8 @@ body{
   box-shadow:0 40px 80px rgba(0,0,0,.6), inset 0 0 20px rgba(0,0,0,.08);
   display:flex;
   perspective:2000px;
-  transition:opacity 1.2s ease;
+  transition:opacity 1s ease;
+  position:relative;
 }
 
 .binding{
@@ -40,6 +41,7 @@ body{
   padding:50px;
   font-size:25px;
   line-height:1.9;
+  position:relative;
   background:repeating-linear-gradient(
     to bottom,
     transparent,
@@ -58,12 +60,12 @@ body{
   transform:rotateY(-165deg);
 }
 
-.page:after{
+.page::after{
   content:"";
   position:absolute;
   top:0;
   right:0;
-  width:35px;
+  width:30px;
   height:100%;
   background:linear-gradient(to right, rgba(0,0,0,.15), transparent);
 }
@@ -74,17 +76,17 @@ body{
   inset:0;
   background:radial-gradient(circle at top, #0d1028, #03040a);
   display:none;
+  z-index:5;
 }
 
 .star{
   position:absolute;
-  width:16px;
-  height:16px;
-  background:radial-gradient(circle, #fff 35%, #ffd6d6 55%, transparent 75%);
+  width:14px;
+  height:14px;
+  background:radial-gradient(circle, #fff 40%, #ffdada 60%, transparent 75%);
   border-radius:50%;
-  box-shadow:0 0 10px rgba(255,255,255,.9), 0 0 25px rgba(255,120,120,.8);
+  box-shadow:0 0 10px rgba(255,255,255,.9), 0 0 20px rgba(255,80,80,.7);
   animation:twinkle 3s infinite ease-in-out;
-  cursor:pointer;
 }
 
 @keyframes twinkle{
@@ -97,6 +99,7 @@ svg{
   position:fixed;
   inset:0;
   pointer-events:none;
+  z-index:6;
 }
 
 /* ================= PASSWORD ================= */
@@ -108,10 +111,11 @@ svg{
   align-items:center;
   flex-direction:column;
   color:white;
+  z-index:10;
 }
 
 .password-box input{
-  padding:10px 16px;
+  padding:12px 18px;
   font-size:20px;
   border:none;
   border-radius:8px;
@@ -121,7 +125,7 @@ svg{
 
 .password-box button{
   margin-top:15px;
-  padding:8px 20px;
+  padding:10px 24px;
   font-size:18px;
   border:none;
   border-radius:8px;
@@ -144,7 +148,7 @@ svg{
 
   <div class="binding"></div>
 
-  <div class="page right" id="rightPage" onclick="nextStep()">
+  <div class="page right" id="rightPage">
     <h2>Page Two 🌙</h2>
     <p>Moments align…</p>
     <p>Just like this.</p>
@@ -163,35 +167,41 @@ svg{
 <svg id="lines"></svg>
 
 <script>
-const CORRECT_PASSWORD = "love";
+/* ================= VARIABLES ================= */
+const CORRECT_PASSWORD = "kiwi";
 let step = 1;
+let connected = 0;
+
+const heartPoints=[
+  [50,28],[62,24],[74,30],
+  [80,42],[70,55],[60,65],
+  [50,75],[40,65],[30,55],
+  [20,42],[26,30],[38,24]
+];
+
+/* ================= CLICK HANDLER ================= */
+document.getElementById("rightPage").onclick = nextStep;
 
 /* ================= FLOW ================= */
 function nextStep(){
-  document.getElementById("rightPage").classList.add("turn");
+  const rightPage = document.getElementById("rightPage");
+  rightPage.classList.add("turn");
 
   setTimeout(()=>{
     if(step === 1){
       showHeart();
-    }else if(step === 3){
+    }
+    else if(step === 3){
       showPassword();
     }
-  },1300);
+  },1200);
 }
 
 /* ================= HEART CONSTELLATION ================= */
-const heartPoints=[
-  [50,30],[60,25],[70,30],
-  [75,40],[70,50],[60,60],
-  [50,70],[40,60],[30,50],
-  [25,40],[30,30],[40,25]
-];
-
-let connected = 0;
-
 function showHeart(){
   step = 2;
   document.getElementById("book").style.opacity=0;
+
   setTimeout(()=>{
     document.getElementById("book").style.display="none";
     document.getElementById("sky").style.display="block";
@@ -205,19 +215,20 @@ function createStars(){
     s.className="star";
     s.style.left=p[0]+"vw";
     s.style.top=p[1]+"vh";
-    s.onclick=connectStar;
     document.body.appendChild(s);
   });
+
+  autoConnect();
 }
 
-function connectStar(){
-  if(connected>=heartPoints.length-1) return;
+function autoConnect(){
+  if(connected >= heartPoints.length-1){
+    setTimeout(loadPageThree,1200);
+    return;
+  }
   drawLine(heartPoints[connected],heartPoints[connected+1]);
   connected++;
-
-  if(connected===heartPoints.length-1){
-    setTimeout(loadPageThree,1200);
-  }
+  setTimeout(autoConnect,300);
 }
 
 function drawLine(a,b){
@@ -237,34 +248,38 @@ function loadPageThree(){
   document.getElementById("lines").innerHTML="";
   document.getElementById("sky").style.display="none";
 
-  document.getElementById("book").style.display="flex";
-  document.getElementById("book").style.opacity=1;
+  const book=document.getElementById("book");
+  book.style.display="flex";
+  book.style.opacity=1;
 
   document.getElementById("leftPage").innerHTML=`
     <h2>Page Three 🌌</h2>
     <p>Some moments change everything.</p>
   `;
 
-  document.getElementById("rightPage").innerHTML=`
+  const rightPage=document.getElementById("rightPage");
+  rightPage.innerHTML=`
     <h2>Turn once more ✨</h2>
     <p>The last page awaits.</p>
   `;
-  document.getElementById("rightPage").classList.remove("turn");
+  rightPage.classList.remove("turn");
+  rightPage.onclick = nextStep;
+
   step = 3;
 }
 
-/* ================= PASSWORD → PAGE 4 ================= */
+/* ================= PASSWORD ================= */
 function showPassword(){
   document.getElementById("book").style.opacity=0;
   setTimeout(()=>{
     document.getElementById("book").style.display="none";
     document.getElementById("passwordBox").style.display="flex";
-  },900);
+  },800);
 }
 
 function checkPassword(){
   const val=document.getElementById("passwordInput").value.toLowerCase();
-  if(val==="kiwi"){
+  if(val === CORRECT_PASSWORD){
     document.getElementById("passwordBox").style.display="none";
     showPageFour();
   }else{
@@ -272,25 +287,28 @@ function checkPassword(){
   }
 }
 
+/* ================= PAGE 4 ================= */
 function showPageFour(){
-  document.getElementById("book").style.display="flex";
-  document.getElementById("book").style.opacity=1;
+  const book=document.getElementById("book");
+  book.style.display="flex";
+  book.style.opacity=1;
 
   document.getElementById("leftPage").innerHTML=`
     <h2>Page Four 💖</h2>
-    <p>Some stories don’t need an ending.</p>
+    <p>Some stories don’t end.</p>
     <p>They begin here.</p>
   `;
 
   document.getElementById("rightPage").innerHTML=`
     <h2>✨</h2>
-    <p>Thank you for reaching the end.</p>
+    <p>This is just the start.</p>
   `;
 }
 </script>
 
 </body>
 </html>
+
 
 
 
