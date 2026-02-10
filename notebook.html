@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Notebook 💕</title>
+
+<!-- ✍️ Handwritten Font -->
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #1b1f3b, #0b0d1a);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Patrick Hand', cursive;
+  overflow: hidden;
+  color: #333;
+}
+
+/* 🌌 STAR BACKGROUND */
+.star {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: twinkle 2s infinite;
+}
+
+@keyframes twinkle {
+  50% { opacity: 1; }
+}
+
+/* NOTEBOOK */
+.notebook {
+  width: 820px;
+  height: 480px;
+  display: flex;
+  background: #fffdf7;
+  border-radius: 16px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+  perspective: 1600px;
+  position: relative;
+  z-index: 5;
+}
+
+/* LEFT PAGE */
+.page.left {
+  width: 50%;
+  padding: 45px;
+  font-size: 24px;
+  line-height: 1.8;
+  border-right: 1px solid #eee;
+}
+
+/* BINDING */
+.binding {
+  width: 18px;
+  background: linear-gradient(#ddd, #bbb);
+}
+
+/* RIGHT PAGE */
+.page.right {
+  width: 50%;
+  padding: 45px;
+  font-size: 23px;
+  cursor: pointer;
+  transform-origin: left center;
+  transition: transform 1.3s ease;
+  position: relative;
+}
+
+/* TURN PAGE */
+.page.right.turn {
+  transform: rotateY(-160deg);
+}
+
+/* NEXT PAGE */
+.next-page {
+  position: absolute;
+  inset: 0;
+  padding: 45px;
+  background: #fffdf7;
+  display: none;
+  font-size: 26px;
+}
+
+.page.right.turn .next-page {
+  display: block;
+}
+
+/* 🔐 LOCK */
+.lock {
+  font-size: 40px;
+  text-align: center;
+  margin-top: 40px;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  50% { transform: scale(1.15); }
+}
+
+.lock-text {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+}
+
+/* 🗝️ KEY */
+.key {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  font-size: 42px;
+  cursor: pointer;
+  animation: float 3s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes float {
+  50% { transform: translateY(-10px); }
+}
+
+/* HINT */
+.hint {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  font-size: 15px;
+  color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔊 PAGE TURN SOUND -->
+<audio id="pageSound" src="sounds/page-turn.mp3"></audio>
+
+<!-- 🗝️ FLOATING KEY -->
+<div class="key" id="key" onclick="unlock()">🗝️</div>
+
+<div class="notebook">
+
+  <!-- LEFT PAGE -->
+  <div class="page left">
+    <h2>Dear You 💕</h2>
+    <p>
+      Some feelings stay locked inside  
+      not because they’re hidden…
+    </p>
+    <p>
+      But because they matter too much  
+      to open without trust.
+    </p>
+  </div>
+
+  <div class="binding"></div>
+
+  <!-- RIGHT PAGE -->
+  <div class="page right" id="rightPage" onclick="turnPage()">
+    <div id="locked">
+      <div class="lock">🔒</div>
+      <div class="lock-text">Only the key can open this</div>
+    </div>
+
+    <div class="next-page">
+      <h2>🌌</h2>
+      <p>
+        Just like these stars…  
+        everything somehow aligned.
+      </p>
+      <p>
+        And led me to you 💖
+      </p>
+    </div>
+
+    <div class="hint">Unlock → click page 📖</div>
+  </div>
+
+</div>
+
+<script>
+let unlocked = false;
+
+function unlock() {
+  unlocked = true;
+  document.getElementById("locked").innerHTML = "🔓<br><small>Unlocked</small>";
+  document.getElementById("key").style.display = "none";
+  createStars();
+}
+
+function turnPage() {
+  if (!unlocked) return;
+  const sound = document.getElementById("pageSound");
+  sound.currentTime = 0;
+  sound.play();
+  document.getElementById("rightPage").classList.add("turn");
+}
+
+/* 🌌 STAR MAP */
+function createStars() {
+  const positions = [
+    [40,30],[50,25],[60,30],
+    [35,40],[65,40],
+    [45,55],[55,55],
+    [50,70]
+  ];
+
+  positions.forEach((pos, i) => {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.left = pos[0] + "vw";
+    star.style.top = pos[1] + "vh";
+    star.style.animationDelay = i * 0.4 + "s";
+    document.body.appendChild(star);
+  });
+}
+</script>
+
+</body>
+</html>
