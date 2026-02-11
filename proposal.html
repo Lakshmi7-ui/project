@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marry Me?</title>
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  font-family: Georgia, serif;
+  text-align:center;
+  color:white;
+}
+
+.scene{
+  position:absolute;
+  width:100%;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+/* ---------------- SCENE 1 ---------------- */
+
+#scene1{
+  background: radial-gradient(circle, #ff758c, #ff2e63);
+}
+
+#proposalText{
+  font-size:70px;
+  font-weight:bold;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{ text-shadow:0 0 20px white;}
+  to{ text-shadow:0 0 40px pink,0 0 60px red;}
+}
+
+/* Falling petals */
+.petal{
+  position:absolute;
+  font-size:20px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall{
+  0%{ transform:translateY(-10vh) rotate(0deg);}
+  100%{ transform:translateY(110vh) rotate(360deg);}
+}
+
+/* PIGEONS */
+.pigeon{
+  position:absolute;
+  font-size:35px;
+  cursor:pointer;
+  animation: moveBird 10s linear infinite;
+}
+
+@keyframes moveBird{
+  0%{ transform:translateX(-10vw);}
+  100%{ transform:translateX(110vw);}
+}
+
+/* ---------------- SCENE 2 ---------------- */
+
+#scene2{
+  display:none;
+  background: radial-gradient(circle, #ff416c, #8b0000);
+}
+
+/* Ring Box */
+#ringBox{
+  font-size:100px;
+  cursor:pointer;
+  transition:transform 0.8s;
+}
+
+#ring{
+  font-size:90px;
+  position:absolute;
+  opacity:0;
+  transform:translateY(40px);
+  transition: all 1s ease;
+}
+
+#ringText{
+  font-size:35px;
+  margin-top:180px;
+}
+
+/* ---------------- SCENE 3 ---------------- */
+
+#scene3{
+  display:none;
+  background:black;
+  overflow:hidden;
+}
+
+#names{
+  font-size:60px;
+  font-weight:bold;
+  animation: glow 2s infinite alternate;
+}
+
+/* Stars */
+.star{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:white;
+  border-radius:50%;
+  animation: twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+  from{ opacity:0.2;}
+  to{ opacity:1;}
+}
+
+</style>
+</head>
+<body>
+
+<!-- SCENE 1 -->
+<div id="scene1" class="scene">
+  <div id="proposalText">WILL YOU MARRY ME?</div>
+</div>
+
+<!-- SCENE 2 -->
+<div id="scene2" class="scene">
+  <div style="position:relative; height:150px;">
+    <div id="ringBox">🎁</div>
+    <div id="ring">💍</div>
+  </div>
+  <div id="ringText">If you want to marry me, wear this ring</div>
+</div>
+
+<!-- SCENE 3 -->
+<div id="scene3" class="scene">
+  <div id="names">Lakshmi ❤️ Kiwi</div>
+</div>
+
+<script>
+
+/* PETALS */
+function createPetals(){
+  for(let i=0;i<30;i++){
+    let petal=document.createElement("div");
+    petal.className="petal";
+    petal.innerHTML="🌹";
+    petal.style.left=Math.random()*100+"vw";
+    petal.style.animationDuration=(Math.random()*5+5)+"s";
+    document.getElementById("scene1").appendChild(petal);
+  }
+}
+createPetals();
+
+/* PIGEONS */
+function createPigeons(){
+  for(let i=0;i<6;i++){
+    let bird=document.createElement("div");
+    bird.className="pigeon";
+    bird.innerHTML="🕊";
+    bird.style.top=Math.random()*80+"vh";
+    bird.style.animationDuration=(Math.random()*5+5)+"s";
+    bird.onclick=goToRing;
+    document.getElementById("scene1").appendChild(bird);
+  }
+}
+createPigeons();
+
+/* GO TO RING SCENE */
+function goToRing(){
+  document.getElementById("scene1").style.display="none";
+  document.getElementById("scene2").style.display="flex";
+}
+
+/* RING BOX OPEN ANIMATION */
+document.getElementById("ringBox").onclick=function(){
+  this.innerHTML="📦";  // opened box
+  let ring=document.getElementById("ring");
+  ring.style.opacity="1";
+  ring.style.transform="translateY(-40px)";
+}
+
+/* CLICK RING → STAR SCENE */
+document.getElementById("ring").onclick=function(){
+  document.getElementById("scene2").style.display="none";
+  document.getElementById("scene3").style.display="flex";
+  createStars();
+}
+
+/* STARS */
+function createStars(){
+  for(let i=0;i<120;i++){
+    let star=document.createElement("div");
+    star.className="star";
+    star.style.top=Math.random()*100+"vh";
+    star.style.left=Math.random()*100+"vw";
+    star.style.animationDuration=(Math.random()*2+1)+"s";
+    document.getElementById("scene3").appendChild(star);
+  }
+}
+
+</script>
+
+</body>
+</html>
