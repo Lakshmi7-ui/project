@@ -56,14 +56,18 @@ body{
 /* PIGEONS */
 .pigeon{
   position:absolute;
-  font-size:35px;
+  font-size:60px;
   cursor:pointer;
-  animation: moveBird 10s linear infinite;
+  animation: flyWave 15s linear infinite; /* wavy motion */
+  transform-origin: center center;;
 }
 
-@keyframes moveBird{
-  0%{ transform:translateX(-10vw);}
-  100%{ transform:translateX(110vw);}
+@keyframes flyWave {
+  0% { transform: translateX(-10vw) translateY(0vh) rotate(0deg);}
+  25% { transform: translateX(25vw) translateY(-5vh) rotate(-15deg);}
+  50% { transform: translateX(50vw) translateY(0vh) rotate(0deg);}
+  75% { transform: translateX(75vw) translateY(5vh) rotate(15deg);}
+  100% { transform: translateX(110vw) translateY(0vh) rotate(0deg);}
 }
 
 /* ---------------- SCENE 2 ---------------- */
@@ -166,8 +170,8 @@ function createPigeons(){
     let bird=document.createElement("div");
     bird.className="pigeon";
     bird.innerHTML="🕊";
-    bird.style.top=Math.random()*80+"vh";
-    bird.style.animationDuration=(Math.random()*5+5)+"s";
+    bird.style.top=Math.random()*70+"vh";
+    bird.style.animationDuration=(Math.random()*10+10)+"s";
     bird.onclick=goToRing;
     document.getElementById("scene1").appendChild(bird);
   }
