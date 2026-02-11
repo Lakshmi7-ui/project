@@ -91,6 +91,22 @@ svg{
   inset:0;
   pointer-events:none;
 }
+  /* Heart button on Page 4 */
+#heartBtn {
+  font-size:50px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:#ff4d6d;
+  animation:beat 1s infinite;
+  margin-top:20px;
+}
+
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
 </style>
 </head>
 
@@ -219,9 +235,13 @@ function showPageFour(){
   document.getElementById("rightPage").innerHTML = `
     <h2>✨</h2>
     <p>Thank you for reaching the end.</p>
+    <button id="heartBtn" onclick="openProposal()">💗</button>
   `;
 
   document.getElementById("rightPage").classList.remove("turn");
+}
+  function openProposal() {
+  window.location.href = "proposal.html";
 }
 </script>
 
